@@ -204,7 +204,8 @@ class Blockchain {
                 self.chain.filter(str => str.getBData()
                     .then((res) => {
                         if (res.address === address) {
-                            let star = res.star;
+                            let star = { owner: res.address, star: res.star };
+                            console.log(star);
                             stars.push(star);
                             resolve(stars);
                         }
@@ -231,18 +232,22 @@ class Blockchain {
             try {
                 var chainHeight = await self.getChainHeight();
                 //include the key of the last block
-                var chainHeightLast = chainHeight + 1;
-                for (let i = 0; i < chainHeightLast; i++) {
+                // var chainHeightLast = chainHeight + 1;
+                for (let i = 0; i <= chainHeight; i++) { //change condition of loop
                     //Validate block
                     var block = await self.getBlockByHeight(i);
+
+                    
                     var nextBlock = await self.getBlockByHeight(i + 1);
+                
+                    
                     var blockHash = block.hash;
                     
                     var prevHash = nextBlock.previousBlockHash;
                     
-                    var vBlock = await block.validate();
+                    var valBlock = await block.validate();
                     
-                    if(vBlock !== true){
+                    if(valBlock !== true){
                         errorLog.push(i);
                     };
                     if ((i+1) <= chainHeight){
